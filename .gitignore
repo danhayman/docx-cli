@@ -1,0 +1,18 @@
+bin/
+obj/
+publish/
+*.user
+*.suo
+.vs/
+.idea/
+*.swp
+*~
+.DS_Store
+.claude/
+
+# Built binary
+/docx
+
+# Test data (binary files)
+testdata/*.docx
+!testdata/.gitkeep
