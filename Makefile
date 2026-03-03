@@ -1,14 +1,14 @@
 .PHONY: build test publish clean
 
 build:
-	dotnet build
+	dotnet build src/ox.slnx
 
 test:
-	dotnet test
+	dotnet test src/ox.slnx
 
 publish:
-	dotnet publish src/DocxCli -r osx-arm64 -c Release
+	dotnet publish src/Ox -r osx-arm64 -c Release
 
 clean:
-	dotnet clean
+	dotnet clean src/ox.slnx
 	rm -rf publish/

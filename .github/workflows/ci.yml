@@ -18,7 +18,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Build
-        run: dotnet build
+        run: dotnet build src/ox.slnx
 
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test src/ox.slnx --no-build

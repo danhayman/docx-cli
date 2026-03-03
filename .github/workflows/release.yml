@@ -15,13 +15,13 @@ jobs:
         include:
           - os: ubuntu-latest
             rid: linux-x64
-            artifact: docx
+            artifact: ox
           - os: macos-latest
             rid: osx-arm64
-            artifact: docx
+            artifact: ox
           - os: windows-latest
             rid: win-x64
-            artifact: docx.exe
+            artifact: ox.exe
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -32,28 +32,28 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Publish
-        run: dotnet publish src/DocxCli -r ${{ matrix.rid }} -c Release -p:PublishAot=true -p:StripSymbols=true
+        run: dotnet publish src/Ox -r ${{ matrix.rid }} -c Release -p:PublishAot=true -p:StripSymbols=true
 
       - name: Package (Unix)
         if: matrix.rid != 'win-x64'
         run: |
           mkdir staging
-          cp src/DocxCli/bin/Release/net10.0/${{ matrix.rid }}/publish/${{ matrix.artifact }} staging/
-          cd staging && tar czf ../docx-${{ matrix.rid }}.tar.gz ${{ matrix.artifact }}
+          cp src/Ox/bin/Release/net10.0/${{ matrix.rid }}/publish/${{ matrix.artifact }} staging/
+          cd staging && tar czf ../ox-${{ matrix.rid }}.tar.gz ${{ matrix.artifact }}
 
       - name: Package (Windows)
         if: matrix.rid == 'win-x64'
         shell: bash
         run: |
           mkdir staging
-          cp src/DocxCli/bin/Release/net10.0/${{ matrix.rid }}/publish/${{ matrix.artifact }} staging/
-          cd staging && 7z a ../docx-${{ matrix.rid }}.zip ${{ matrix.artifact }}
+          cp src/Ox/bin/Release/net10.0/${{ matrix.rid }}/publish/${{ matrix.artifact }} staging/
+          cd staging && 7z a ../ox-${{ matrix.rid }}.zip ${{ matrix.artifact }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: docx-${{ matrix.rid }}
-          path: docx-${{ matrix.rid }}.*
+          name: ox-${{ matrix.rid }}
+          path: ox-${{ matrix.rid }}.*
 
   release:
     needs: build
