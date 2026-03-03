@@ -92,7 +92,6 @@ P5  Compensation shall not exceed £50,000.
 **Flags:**
 - `--wrap N` — wrap lines at N chars (default: 80)
 - `--no-wrap` — don't wrap, one line per paragraph
-- `--json` — output structured JSON (paragraph objects with text + formatting metadata)
 - `--plain` — plain text, no paragraph numbers
 - `--track-changes` — show tracked changes inline: ~~deleted~~ **inserted**
 
@@ -220,24 +219,6 @@ ins.Append(insertRun);
 ```
 
 User opens in Word/LibreOffice → sees red strikethrough + blue insertion → accepts/rejects.
-
-### `docx-cli find-replace <file> <find> <replace>`
-
-Bulk find and replace. Always replaces all occurrences.
-
-```
-$ docx-cli find-replace contract.docx "Party A" "Acme Ltd"
-replaced 4 occurrences
-
-$ docx-cli find-replace contract.docx "Party A" "Acme Ltd" --track
-4 tracked changes added (author: docx-cli)
-```
-
-**Flags:**
-- `--track` — tracked changes mode
-- `--case-insensitive` / `-i`
-- `--author "Name"`
-- `--dry-run`
 
 ### `docx-cli insert <file> <text>`
 
@@ -379,7 +360,6 @@ $ docx-cli edit contract.docx --old "X" --new "Y" -o contract-edited.docx
 
 ## Global Flags (match gogcli)
 
-- `-j, --json` — JSON output
 - `-p, --plain` — parseable plain text (TSV)
 - `-n, --dry-run` — no changes
 - `-y, --force` — skip confirmations
@@ -426,19 +406,17 @@ brew install danhayman/tap/docx-cli
 - [ ] `info` metadata (author, dates, word count)
 - [ ] Handle tables (basic text extraction)
 - [ ] Lock file detection
-- [ ] `--json` output for `read`
 
 ### v0.2 — Edit (week 2)
 - [ ] Single-run text replacement (`edit --old --new`)
 - [ ] Cross-run text replacement
 - [ ] Formatting preservation (inherit from first matched run)
 - [ ] Uniqueness checking and `--replace-all`
-- [ ] `find-replace` bulk command
 - [ ] `--backup` and `-o` output
 - [ ] `--dry-run` for all write commands
 
 ### v0.3 — Track Changes (week 3)
-- [ ] `--track` flag for edit/find-replace/insert/delete
+- [ ] `--track` flag for edit/insert/delete
 - [ ] Proper `Inserted` / `Deleted` element generation via SDK
 - [ ] Author and timestamp metadata
 - [ ] Read and display existing tracked changes in `read --track-changes`
@@ -475,7 +453,6 @@ docx-cli/
 │       │   ├── CatCommand.cs
 │       │   ├── InfoCommand.cs
 │       │   ├── EditCommand.cs
-│       │   ├── FindReplaceCommand.cs
 │       │   ├── InsertCommand.cs
 │       │   ├── DeleteCommand.cs
 │       │   └── CommentCommand.cs
@@ -488,7 +465,7 @@ docx-cli/
 │       │   └── LockDetector.cs        # Lock file detection
 │       └── Output/
 │           ├── TextFormatter.cs       # Text wrapping, paragraph display
-│           └── JsonFormatter.cs       # JSON output
+│           └── TextFormatter.cs       # Text wrapping, paragraph display
 ├── tests/
 │   └── DocxCli.Tests/
 │       ├── TextSearchTests.cs
@@ -643,9 +620,6 @@ docx-cli edit contract.docx --old "30 days" --new "60 days"
 
 # Edit with tracked changes (non-destructive)
 docx-cli edit contract.docx --old "30 days" --new "60 days" --track
-
-# Bulk find and replace
-docx-cli find-replace contract.docx "Party A" "Acme Ltd"
 
 # Add a comment
 docx-cli comment add contract.docx --at "indemnify" --text "Cap this?"

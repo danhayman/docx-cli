@@ -13,7 +13,7 @@ public static class ReadCommand
         var limitOption = new Option<int>("--limit") { Description = "Max characters to read (0 = all)", DefaultValueFactory = _ => 100000 };
         var trackChangesOption = new Option<bool>("--track-changes") { Description = "Show tracked changes inline" };
 
-        var command = new Command("read") { Description = "Read document content with character offset/limit" };
+        var command = new Command("read") { Description = "Read document content with paragraph numbers and character offset/limit. Supports globs (e.g. '*.docx', '**/*.docx')" };
         command.Arguments.Add(fileArg);
         command.Options.Add(offsetOption);
         command.Options.Add(limitOption);

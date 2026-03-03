@@ -6,6 +6,7 @@
     <RootNamespace>DocxCli</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>docx</AssemblyName>
     <PublishAot>true</PublishAot>
     <InvariantGlobalization>false</InvariantGlobalization>
     <Version>0.1.0</Version>

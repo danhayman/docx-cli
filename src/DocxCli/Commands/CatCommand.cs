@@ -8,7 +8,7 @@ public static class CatCommand
     public static Command Create()
     {
         var fileArg = new Argument<string[]>("file") { Description = "Path(s) or glob pattern(s) for .docx files", Arity = ArgumentArity.OneOrMore };
-        var command = new Command("cat") { Description = "Dump plain text (accepts globs, pipe to grep to search)" };
+        var command = new Command("cat") { Description = "Dump plain text. Supports globs (e.g. '*.docx', '**/*.docx'). Pipe to grep to search: docx cat '*.docx' | grep -i budget" };
         command.Arguments.Add(fileArg);
 
         command.SetActionWithErrorHandling((parseResult, ct) =>
