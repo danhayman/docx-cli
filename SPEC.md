@@ -76,39 +76,38 @@ Key challenge: a single word/phrase may span multiple runs due to formatting bou
 
 ### `ox read <file>`
 
-Display document content with paragraph numbers.
+Display document content with character offset/limit for pagination.
 
 ```
 $ ox read contract.docx
-P1  Agreement between Party A and Party B
-P2
-P3  The term is 30 days from the date of signing.
-    Party A shall deliver all materials within
-    this period.
-P4
-P5  Compensation shall not exceed £50,000.
+Agreement between Party A and Party B
+
+The term is 30 days from the date of signing.
+Party A shall deliver all materials within
+this period.
+
+Compensation shall not exceed £50,000.
 ```
 
 **Flags:**
+- `--offset` — character offset to start from (0-indexed)
+- `--limit` — max characters to read (default: 100000)
 - `--track-changes` — show tracked changes inline: ~~deleted~~ **inserted**
 
 **Implementation:**
 ```csharp
 using var doc = WordprocessingDocument.Open(path, false);
 var body = doc.MainDocumentPart.Document.Body;
-int pNum = 1;
 
 foreach (var para in body.Elements<Paragraph>())
 {
-    var text = para.InnerText;
-    Console.WriteLine($"P{pNum,-3} {WrapText(text, 80)}");
-    pNum++;
+    Console.WriteLine(para.InnerText);
 }
 ```
 
 ### `ox cat <file>`
 
-Plain text dump. No paragraph numbers, no formatting. Pipe-friendly.
+Plain text dump. No formatting. Pipe-friendly.
 
 ```
 $ ox cat contract.docx
@@ -261,9 +260,9 @@ Show differences between two documents. Nice-to-have for v2.
 
 ```
 $ ox diff original.docx edited.docx
-P3: "30 days" → "60 days"
-P5: "£50,000" → "£75,000"
-P12: [deleted paragraph]
+"30 days" → "60 days"
+"£50,000" → "£75,000"
+[deleted paragraph]
 ```
 
 ---
@@ -299,7 +298,7 @@ replaced 1 occurrence
 Every write command supports `--dry-run`:
 ```
 $ ox edit contract.docx --old "30 days" --new "60 days" --dry-run
-would replace 1 occurrence in P3:
+would replace 1 occurrence:
   "The term is [30 days] from the date..."
             → "The term is [60 days] from the date..."
 ```
@@ -352,7 +351,7 @@ brew install danhayman/tap/ox-cli
 
 ### v0.1 — Read (week 1)
 - [ ] Project setup (.NET 8, System.CommandLine, Open XML SDK)
-- [ ] `read` with paragraph numbers and text wrapping
+- [ ] `read` with character offset/limit and text wrapping
 - [ ] `cat` plain text
 - [ ] `info` metadata (author, dates, word count)
 - [ ] Handle tables (basic text extraction)

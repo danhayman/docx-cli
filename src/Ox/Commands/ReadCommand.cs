@@ -14,7 +14,7 @@ public static class ReadCommand
         var trackChangesOption = new Option<bool>("--track-changes") { Description = "Show tracked changes inline (.docx only)" };
         var sheetOption = new Option<string?>("--sheet") { Description = "For .xlsx: only output rows from this sheet (default: all sheets)" };
 
-        var command = new Command("read") { Description = "Read document content with paragraph numbers and character offset/limit. Supports globs (e.g. '*.docx', '**/*.pptx')" };
+        var command = new Command("read") { Description = "Read document content with character offset/limit. Supports globs (e.g. '*.docx', '**/*.pptx')" };
         command.Arguments.Add(fileArg);
         command.Options.Add(offsetOption);
         command.Options.Add(limitOption);
