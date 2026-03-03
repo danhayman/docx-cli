@@ -14,5 +14,4 @@ publish/
 /docx
 
 # Test data (binary files)
-testdata/*.docx
 !testdata/.gitkeep
