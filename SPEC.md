@@ -90,9 +90,6 @@ P5  Compensation shall not exceed £50,000.
 ```
 
 **Flags:**
-- `--wrap N` — wrap lines at N chars (default: 80)
-- `--no-wrap` — don't wrap, one line per paragraph
-- `--plain` — plain text, no paragraph numbers
 - `--track-changes` — show tracked changes inline: ~~deleted~~ **inserted**
 
 **Implementation:**
@@ -220,49 +217,6 @@ ins.Append(insertRun);
 
 User opens in Word/LibreOffice → sees red strikethrough + blue insertion → accepts/rejects.
 
-### `docx-cli insert <file> <text>`
-
-Insert text at a position.
-
-```
-$ docx-cli insert contract.docx "New clause here." --after "Section 3"
-inserted after "Section 3"
-
-$ docx-cli insert contract.docx "Preamble text." --before "Agreement between"
-inserted before "Agreement between"
-
-$ docx-cli insert contract.docx "New paragraph." --after-para 5
-inserted after paragraph 5
-```
-
-**Flags:**
-- `--after "text"` — insert after unique string match
-- `--before "text"` — insert before unique string match
-- `--after-para N` — insert after paragraph N
-- `--track` — insert as tracked insertion
-- `--heading N` — format as heading level N
-- `--style "StyleName"` — apply named style
-
-### `docx-cli delete <file>`
-
-Delete text or paragraphs.
-
-```
-$ docx-cli delete contract.docx --text "obsolete clause here"
-deleted 1 occurrence
-
-$ docx-cli delete contract.docx --para 5
-deleted paragraph 5
-
-$ docx-cli delete contract.docx --para 5-8
-deleted paragraphs 5-8
-```
-
-**Flags:**
-- `--text "X"` — delete matching text
-- `--para N` or `--para N-M` — delete paragraph(s)
-- `--track` — mark as tracked deletion
-
 ### `docx-cli comment <file>`
 
 Add, list, or remove comments.
@@ -358,14 +312,11 @@ $ docx-cli edit contract.docx --old "X" --new "Y" -o contract-edited.docx
 
 ---
 
-## Global Flags (match gogcli)
+## Global Flags
 
-- `-p, --plain` — parseable plain text (TSV)
 - `-n, --dry-run` — no changes
 - `-y, --force` — skip confirmations
-- `-v, --verbose` — debug logging
 - `--version` — print version
-- `--color auto|always|never`
 
 ---
 
@@ -416,27 +367,22 @@ brew install danhayman/tap/docx-cli
 - [ ] `--dry-run` for all write commands
 
 ### v0.3 — Track Changes (week 3)
-- [ ] `--track` flag for edit/insert/delete
+- [ ] `--track` flag for edit
 - [ ] Proper `Inserted` / `Deleted` element generation via SDK
 - [ ] Author and timestamp metadata
 - [ ] Read and display existing tracked changes in `read --track-changes`
 
-### v0.4 — Insert, Delete, Comments (week 4)
-- [ ] `insert` with --after/--before/--after-para
-- [ ] `delete` text and paragraphs
+### v0.4 — Comments (week 4)
 - [ ] `comment add/list/delete`
 - [ ] Full comment support via SDK (CommentRangeStart/End, CommentReference)
 
 ### v0.5 — Polish (week 5)
+- [ ] Edge cases: graceful errors for empty docs, password-protected, corrupted files
 - [ ] AOT publishing for linux-x64, osx-arm64, win-x64
-- [ ] Edge cases: empty docs, password-protected, corrupted files
-- [ ] Headers/footers support
-- [ ] Footnotes/endnotes
-- [ ] Test suite with real-world .docx files from Word, LibreOffice, Google Docs, WPS
-- [ ] README with examples
-- [ ] Homebrew formula
-- [ ] GitHub releases with binaries
 - [ ] CI/CD (GitHub Actions)
+- [ ] GitHub releases with binaries
+- [ ] Homebrew formula
+- [ ] README with examples
 
 ---
 
@@ -453,8 +399,6 @@ docx-cli/
 │       │   ├── CatCommand.cs
 │       │   ├── InfoCommand.cs
 │       │   ├── EditCommand.cs
-│       │   ├── InsertCommand.cs
-│       │   ├── DeleteCommand.cs
 │       │   └── CommentCommand.cs
 │       ├── Core/
 │       │   ├── DocumentService.cs     # Open, save, backup .docx
@@ -464,7 +408,6 @@ docx-cli/
 │       │   ├── CommentService.cs      # Comment management
 │       │   └── LockDetector.cs        # Lock file detection
 │       └── Output/
-│           ├── TextFormatter.cs       # Text wrapping, paragraph display
 │           └── TextFormatter.cs       # Text wrapping, paragraph display
 ├── tests/
 │   └── DocxCli.Tests/

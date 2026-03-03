@@ -15,7 +15,7 @@ public static class EditCommand
         var backupOption = new Option<bool>("--backup") { Description = "Create .docx.bak before editing" };
         var outputOption = new Option<string?>("--output", "-o") { Description = "Write to different file instead of in-place" };
 
-        var command = new Command("edit") { Description = "Replace text in documents. Supports globs (e.g. '*.docx', '**/*.docx'). Use \\n in --new for new paragraphs" };
+        var command = new Command("edit") { Description = "Replace, insert, or delete text in documents. Use --new \"\" to delete. Use \\n in --new to insert paragraphs. Use --track for reviewable changes (shows as red/blue in Word). Supports globs (e.g. '*.docx', '**/*.docx')" };
         command.Arguments.Add(fileArg);
         command.Options.Add(oldOption);
         command.Options.Add(newOption);

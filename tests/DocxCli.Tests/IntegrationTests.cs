@@ -134,4 +134,29 @@ public class IntegrationTests
         doc.Dispose();
         File.Delete(path);
     }
+
+    [Fact]
+    public void ZeroByteFile_ThrowsMeaningfulError()
+    {
+        var path = Path.GetTempFileName();
+        // File is already zero bytes
+
+        var ex = Assert.Throws<InvalidOperationException>(() => DocumentService.OpenRead(path));
+        Assert.Contains("empty", ex.Message);
+
+        File.Delete(path);
+    }
+
+    [Fact]
+    public void OleCompoundDocument_ThrowsMeaningfulError()
+    {
+        var path = Path.GetTempFileName();
+        // Write OLE compound document magic bytes
+        File.WriteAllBytes(path, [0xD0, 0xCF, 0x11, 0xE0, 0x00, 0x00, 0x00, 0x00]);
+
+        var ex = Assert.Throws<InvalidOperationException>(() => DocumentService.OpenRead(path));
+        Assert.Contains("password-protected", ex.Message);
+
+        File.Delete(path);
+    }
 }

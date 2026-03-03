@@ -11,6 +11,7 @@ public static class DocumentService
         if (!File.Exists(path))
             throw new FileNotFoundException($"File not found: {path}", path);
 
+        ValidateFile(path);
         return WordprocessingDocument.Open(path, false);
     }
 
@@ -26,6 +27,8 @@ public static class DocumentService
             Console.Error.WriteLine($"backed up to {bakPath}");
         }
 
+        ValidateFile(path);
+
         // If writing to a different output, clone there and edit the clone
         if (outputPath != null)
         {
@@ -35,6 +38,23 @@ public static class DocumentService
 
         // In-place edit: clone to temp, we'll move back after save
         return WordprocessingDocument.Open(path, true);
+    }
+
+    private static void ValidateFile(string path)
+    {
+        var fileInfo = new FileInfo(path);
+        if (fileInfo.Length == 0)
+            throw new InvalidOperationException($"file is empty (zero bytes): {path}");
+
+        // Password-protected .docx files are OLE compound documents, not ZIP.
+        // Detect by checking for OLE magic bytes: D0 CF 11 E0
+        using var fs = File.OpenRead(path);
+        Span<byte> header = stackalloc byte[4];
+        if (fs.Read(header) == 4
+            && header[0] == 0xD0 && header[1] == 0xCF && header[2] == 0x11 && header[3] == 0xE0)
+        {
+            throw new InvalidOperationException($"file appears to be password-protected: {path}");
+        }
     }
 
     public static void SaveAtomically(WordprocessingDocument doc, string originalPath, string? outputPath)

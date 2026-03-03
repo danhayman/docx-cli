@@ -6,13 +6,25 @@ A single 25MB binary with no dependencies. Treats `.docx` files like text files 
 
 ## Install
 
-```
+Download from [GitHub Releases](https://github.com/danhayman/docx-cli/releases/latest):
+
+| Platform | Download |
+|----------|----------|
+| Linux x64 | `docx-linux-x64.tar.gz` |
+| macOS ARM64 | `docx-osx-arm64.tar.gz` |
+| Windows x64 | `docx-win-x64.zip` |
+
+```bash
+# Linux / macOS
+tar xzf docx-*.tar.gz
+sudo mv docx /usr/local/bin/
+
 # Build from source (.NET 10 SDK required)
-dotnet publish src/DocxCli -r osx-arm64 -c Release /p:PublishAot=true
-cp src/DocxCli/bin/Release/net10.0/osx-arm64/publish/DocxCli /usr/local/bin/docx
+dotnet publish src/DocxCli -r linux-x64 -c Release -p:PublishAot=true -p:StripSymbols=true
+sudo cp src/DocxCli/bin/Release/net10.0/linux-x64/publish/docx /usr/local/bin/
 ```
 
-The output is a native AOT-compiled binary. No .NET runtime needed at runtime.
+The output is a native AOT-compiled binary. No .NET runtime needed.
 
 ## Commands
 

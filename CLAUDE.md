@@ -32,7 +32,7 @@ dotnet publish src/DocxCli -r linux-x64 -c Release -p:PublishAot=true -p:StripSy
 - `TextReplacer.cs` — Replaces text while preserving formatting. Handles single-run, cross-run, and newline (paragraph-creating) cases. Clones RunProperties from the start run.
 - `TrackedChanges.cs` — Creates DeletedRun/InsertedRun pairs using Open-XML-SDK types with author/date/revisionId metadata.
 - `CommentService.cs` — Manages comments stored in a separate XML part with CommentRangeStart/End anchors in the document body.
-- `DocumentService.cs` — File I/O with read-only vs edit modes, atomic saves, paragraph extraction (including synthetic table rows).
+- `DocumentService.cs` — File I/O with read-only vs edit modes, atomic saves, paragraph extraction (including synthetic table rows). Pre-validates files (zero-byte, password-protected OLE detection).
 
 **Output** (`src/DocxCli/Output/TextFormatter.cs`): Text wrapping, track changes display (~~deleted~~ **inserted**), table formatting.
 
@@ -45,3 +45,12 @@ dotnet publish src/DocxCli -r linux-x64 -c Release -p:PublishAot=true -p:StripSy
 ## Tests
 
 xUnit tests in `tests/DocxCli.Tests/`. `TestHelper.cs` provides utilities for creating temporary .docx files: `CreateTestDocx()`, `CreateMultiRunDocx()`, `CreateDocxWithTable()`, and readers `ReadDocxText()`/`ReadDocxParagraphs()`.
+
+## CI/CD
+
+- **CI**: `.github/workflows/ci.yml` — builds and tests on push to main and PRs.
+- **Release**: `.github/workflows/release.yml` — on `v*` tags, builds AOT binaries for linux-x64, osx-arm64, win-x64 and creates a GitHub release.
+
+## Binary
+
+The published binary is named `docx` (set via `AssemblyName` in the csproj), not `DocxCli`.
