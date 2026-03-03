@@ -1,6 +1,6 @@
-# docx-cli
+# ox-cli
 
-Read and edit Word documents from the terminal.
+Read and edit Office documents from the terminal.
 Built for AI agents. Works for humans too.
 
 Inspired by [gogcli](https://github.com/steipete/gogcli) — same ergonomics, but for local `.docx` files.
@@ -74,12 +74,12 @@ Key challenge: a single word/phrase may span multiple runs due to formatting bou
 
 ## Commands
 
-### `docx-cli read <file>`
+### `ox read <file>`
 
 Display document content with paragraph numbers.
 
 ```
-$ docx-cli read contract.docx
+$ ox read contract.docx
 P1  Agreement between Party A and Party B
 P2
 P3  The term is 30 days from the date of signing.
@@ -106,23 +106,23 @@ foreach (var para in body.Elements<Paragraph>())
 }
 ```
 
-### `docx-cli cat <file>`
+### `ox cat <file>`
 
 Plain text dump. No paragraph numbers, no formatting. Pipe-friendly.
 
 ```
-$ docx-cli cat contract.docx
+$ ox cat contract.docx
 Agreement between Party A and Party B
 
 The term is 30 days from the date of signing...
 ```
 
-### `docx-cli info <file>`
+### `ox info <file>`
 
 Document metadata.
 
 ```
-$ docx-cli info contract.docx
+$ ox info contract.docx
 File:       contract.docx
 Size:       45.2 KB
 Pages:      3 (estimated)
@@ -141,25 +141,25 @@ Console.WriteLine($"Created:  {props.Created}");
 Console.WriteLine($"Modified: {props.Modified}");
 ```
 
-### `docx-cli edit <file> --old "X" --new "Y"`
+### `ox edit <file> --old "X" --new "Y"`
 
 Replace text by unique string matching. Core command.
 
 ```
-$ docx-cli edit contract.docx --old "30 days" --new "60 days"
+$ ox edit contract.docx --old "30 days" --new "60 days"
 replaced 1 occurrence
 
-$ docx-cli edit contract.docx --old "Party" --new "Company"
+$ ox edit contract.docx --old "Party" --new "Company"
 error: "Party" is not unique (found 8 occurrences). Use --replace-all to replace all.
 
-$ docx-cli edit contract.docx --old "Party" --new "Company" --replace-all
+$ ox edit contract.docx --old "Party" --new "Company" --replace-all
 replaced 8 occurrences
 ```
 
 **Flags:**
 - `--replace-all` — replace all occurrences (required if not unique)
 - `--track` — insert as tracked change instead of direct edit
-- `--author "Name"` — author for tracked changes (default: "docx-cli")
+- `--author "Name"` — author for tracked changes (default: "ox")
 - `--dry-run` — show what would change without modifying file
 - `--backup` — create `.docx.bak` before editing
 - `-o, --output <file>` — write to different file instead of in-place
@@ -190,7 +190,7 @@ RemoveRunRange(startRun, startOffset, endRun, endOffset);
 startRun.InsertAfterSelf(newRun);
 ```
 
-### `docx-cli edit <file> --track --old "X" --new "Y"`
+### `ox edit <file> --track --old "X" --new "Y"`
 
 Same as edit but inserts tracked changes instead of direct replacement.
 
@@ -217,20 +217,20 @@ ins.Append(insertRun);
 
 User opens in Word/LibreOffice → sees red strikethrough + blue insertion → accepts/rejects.
 
-### `docx-cli comment <file>`
+### `ox comment <file>`
 
 Add, list, or remove comments.
 
 ```
-$ docx-cli comment add contract.docx --at "indemnify" --text "Should we cap this?"
+$ ox comment add contract.docx --at "indemnify" --text "Should we cap this?"
 comment added at "indemnify" (id: 1)
 
-$ docx-cli comment list contract.docx
+$ ox comment list contract.docx
 ID  AUTHOR      DATE        AT                  TEXT
-1   docx-cli    2026-02-26  "indemnify"         Should we cap this?
+1   ox          2026-02-26  "indemnify"         Should we cap this?
 2   Dan         2026-02-20  "30 days"           Too short?
 
-$ docx-cli comment delete contract.docx --id 1
+$ ox comment delete contract.docx --id 1
 comment 1 deleted
 ```
 
@@ -255,12 +255,12 @@ para.InsertAfter(new CommentRangeEnd { Id = nextId.ToString() }, targetRun);
 para.InsertAfter(new Run(new CommentReference { Id = nextId.ToString() }), targetRun);
 ```
 
-### `docx-cli diff <file1> <file2>`
+### `ox diff <file1> <file2>`
 
 Show differences between two documents. Nice-to-have for v2.
 
 ```
-$ docx-cli diff original.docx edited.docx
+$ ox diff original.docx edited.docx
 P3: "30 days" → "60 days"
 P5: "£50,000" → "£75,000"
 P12: [deleted paragraph]
@@ -277,7 +277,7 @@ Before any write operation, check for:
 - `.~lock.filename.docx#` (LibreOffice lock file)
 
 ```
-$ docx-cli edit contract.docx --old "X" --new "Y"
+$ ox edit contract.docx --old "X" --new "Y"
 error: file appears to be open in another application (~$contract.docx exists)
 hint: close the file first, or use --force to edit anyway
 ```
@@ -289,7 +289,7 @@ hint: close the file first, or use --force to edit anyway
 ### Backup
 
 ```
-$ docx-cli edit contract.docx --old "X" --new "Y" --backup
+$ ox edit contract.docx --old "X" --new "Y" --backup
 backed up to contract.docx.bak
 replaced 1 occurrence
 ```
@@ -298,7 +298,7 @@ replaced 1 occurrence
 
 Every write command supports `--dry-run`:
 ```
-$ docx-cli edit contract.docx --old "30 days" --new "60 days" --dry-run
+$ ox edit contract.docx --old "30 days" --new "60 days" --dry-run
 would replace 1 occurrence in P3:
   "The term is [30 days] from the date..."
             → "The term is [60 days] from the date..."
@@ -307,7 +307,7 @@ would replace 1 occurrence in P3:
 ### Output to Different File
 
 ```
-$ docx-cli edit contract.docx --old "X" --new "Y" -o contract-edited.docx
+$ ox edit contract.docx --old "X" --new "Y" -o contract-edited.docx
 ```
 
 ---
@@ -343,7 +343,7 @@ dotnet publish -r win-x64 -c Release -p:PublishAot=true -p:StripSymbols=true
 
 ### Homebrew
 ```bash
-brew install danhayman/tap/docx-cli
+brew install danhayman/tap/ox-cli
 ```
 
 ---
@@ -389,11 +389,11 @@ brew install danhayman/tap/docx-cli
 ## Project Structure
 
 ```
-docx-cli/
+ox-cli/
 ├── src/
-│   └── DocxCli/
+│   └── Ox/
 │       ├── Program.cs                 # Entry point, command registration
-│       ├── DocxCli.csproj             # Project file (AOT-enabled)
+│       ├── Ox.csproj                  # Project file (AOT-enabled)
 │       ├── Commands/
 │       │   ├── ReadCommand.cs
 │       │   ├── CatCommand.cs
@@ -410,7 +410,7 @@ docx-cli/
 │       └── Output/
 │           └── TextFormatter.cs       # Text wrapping, paragraph display
 ├── tests/
-│   └── DocxCli.Tests/
+│   └── Ox.Tests/
 │       ├── TextSearchTests.cs
 │       ├── TextReplacerTests.cs
 │       ├── TrackedChangesTests.cs
@@ -422,7 +422,7 @@ docx-cli/
 │   ├── tracked_changes.docx
 │   ├── cross_run.docx              # Text split across runs
 │   └── comments.docx
-├── docx-cli.sln
+├── ox-cli.slnx
 ├── Makefile
 ├── README.md
 └── LICENSE                          # MIT
@@ -437,7 +437,7 @@ docx-cli/
 The hardest problem. Text like "Hello World" might be split across runs:
 ```csharp
 // Run 1: "Hel" (bold)
-// Run 2: "lo Wor" (bold)  
+// Run 2: "lo Wor" (bold)
 // Run 3: "ld" (bold)
 ```
 
@@ -446,27 +446,27 @@ The hardest problem. Text like "Hello World" might be split across runs:
 public static List<TextMatch> FindText(Paragraph para, string searchText)
 {
     var runs = para.Elements<Run>().ToList();
-    
+
     // Build concatenated text with run boundary tracking
     var sb = new StringBuilder();
     var runMap = new List<(int RunIndex, int StartInConcat)>();
-    
+
     foreach (var (run, i) in runs.Select((r, i) => (r, i)))
     {
         runMap.Add((i, sb.Length));
         sb.Append(run.InnerText);
     }
-    
+
     var fullText = sb.ToString();
     var matches = new List<TextMatch>();
-    
+
     int pos = 0;
     while ((pos = fullText.IndexOf(searchText, pos)) >= 0)
     {
         matches.Add(new TextMatch(pos, searchText.Length, runMap));
         pos += searchText.Length;
     }
-    
+
     return matches;
 }
 ```
@@ -533,9 +533,9 @@ Open XML SDK works with AOT as of v3.0+. Ensure:
 ## README Draft
 
 ```markdown
-# docx-cli
+# ox
 
-Read and edit Word documents from the terminal.
+Read and edit Office documents from the terminal.
 Built for AI agents. Works for humans too.
 
 Powered by Microsoft's [Open XML SDK](https://github.com/dotnet/Open-XML-SDK).
@@ -543,32 +543,32 @@ Powered by Microsoft's [Open XML SDK](https://github.com/dotnet/Open-XML-SDK).
 ## Install
 
 ### Homebrew
-brew install danhayman/tap/docx-cli
+brew install danhayman/tap/ox-cli
 
 ### Binary
-Download from [GitHub Releases](https://github.com/danhayman/docx-cli/releases).
+Download from [GitHub Releases](https://github.com/danhayman/ox-cli/releases).
 
 ### Build from source
-git clone https://github.com/danhayman/docx-cli
-cd docx-cli
+git clone https://github.com/danhayman/ox-cli
+cd ox-cli
 dotnet publish -r linux-x64 -c Release -p:PublishAot=true
 
 ## Quick Start
 
 # Read a document
-docx-cli read contract.docx
+ox read contract.docx
 
 # Edit text
-docx-cli edit contract.docx --old "30 days" --new "60 days"
+ox edit contract.docx --old "30 days" --new "60 days"
 
 # Edit with tracked changes (non-destructive)
-docx-cli edit contract.docx --old "30 days" --new "60 days" --track
+ox edit contract.docx --old "30 days" --new "60 days" --track
 
 # Add a comment
-docx-cli comment add contract.docx --at "indemnify" --text "Cap this?"
+ox comment add contract.docx --at "indemnify" --text "Cap this?"
 
 # Works with cloud-synced files
-docx-cli edit ~/Dropbox/contract.docx --old "draft" --new "final"
+ox edit ~/Dropbox/contract.docx --old "draft" --new "final"
 ```
 
 ---
@@ -585,4 +585,4 @@ docx-cli edit ~/Dropbox/contract.docx --old "draft" --new "final"
 
 5. **Max file size** — should we set a limit? The SDK streams efficiently but very large docs could still consume memory.
 
-6. **NuGet package** — publish `DocxCli.Core` as a NuGet for other .NET projects to use the text search/replace engine?
+6. **NuGet package** — publish `Ox.Core` as a NuGet for other .NET projects to use the text search/replace engine?

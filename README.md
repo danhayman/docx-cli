@@ -1,27 +1,27 @@
-# docx
+# ox
 
-Read and edit Word documents from the terminal.
+Read and edit Office documents from the terminal.
 
-A single 25MB binary with no dependencies. Treats `.docx` files like text files — read, edit, search, pipe to `grep`. Designed for humans and AI agents.
+A single native binary with no dependencies. Treats `.docx`, `.pptx`, and `.xlsx` files like text files — read, edit, search, pipe to `grep`. Designed for humans and AI agents.
 
 ## Install
 
-Download from [GitHub Releases](https://github.com/danhayman/docx-cli/releases/latest):
+Download from [GitHub Releases](https://github.com/danhayman/ox-cli/releases/latest):
 
 | Platform | Download |
 |----------|----------|
-| Linux x64 | `docx-linux-x64.tar.gz` |
-| macOS ARM64 | `docx-osx-arm64.tar.gz` |
-| Windows x64 | `docx-win-x64.zip` |
+| Linux x64 | `ox-linux-x64.tar.gz` |
+| macOS ARM64 | `ox-osx-arm64.tar.gz` |
+| Windows x64 | `ox-win-x64.zip` |
 
 ```bash
 # Linux / macOS
-tar xzf docx-*.tar.gz
-sudo mv docx /usr/local/bin/
+tar xzf ox-*.tar.gz
+sudo mv ox /usr/local/bin/
 
 # Build from source (.NET 10 SDK required)
-dotnet publish src/DocxCli -r linux-x64 -c Release -p:PublishAot=true -p:StripSymbols=true
-sudo cp src/DocxCli/bin/Release/net10.0/linux-x64/publish/docx /usr/local/bin/
+dotnet publish src/Ox -r linux-x64 -c Release -p:PublishAot=true -p:StripSymbols=true
+sudo cp src/Ox/bin/Release/net10.0/linux-x64/publish/ox /usr/local/bin/
 ```
 
 The output is a native AOT-compiled binary. No .NET runtime needed.
@@ -29,11 +29,11 @@ The output is a native AOT-compiled binary. No .NET runtime needed.
 ## Commands
 
 ```
-docx cat <file>...    Dump plain text (pipe to grep to search)
-docx read <file>...   Read content with character offset/limit
-docx info <file>      Show metadata (title, author, word count)
-docx edit <file>...   Replace text (use \n for new paragraphs)
-docx comment          Add, list, or remove comments
+ox cat <file>...    Dump plain text (pipe to grep to search)
+ox read <file>...   Read content with character offset/limit
+ox info <file>      Show metadata (title, author, word count)
+ox edit <file>...   Replace text (use \n for new paragraphs)
+ox comment          Add, list, or remove comments
 ```
 
 ## Examples
@@ -41,13 +41,13 @@ docx comment          Add, list, or remove comments
 Read a document:
 
 ```bash
-docx read report.docx
+ox read report.docx
 ```
 
 Search across a directory of documents:
 
 ```bash
-docx cat "**/*.docx" | grep -i "budget"
+ox cat "**/*.docx" | grep -i "budget"
 # reports/Q1.docx:Revenue exceeded budget by 15%
 # reports/Q3.docx:Budget review scheduled for Monday
 ```
@@ -55,25 +55,25 @@ docx cat "**/*.docx" | grep -i "budget"
 Edit text:
 
 ```bash
-docx edit report.docx --old "Draft" --new "Final"
+ox edit report.docx --old "Draft" --new "Final"
 ```
 
 Insert new paragraphs (use `\n`):
 
 ```bash
-docx edit report.docx --old "Introduction" --new "Introduction\nThis report covers Q1 results."
+ox edit report.docx --old "Introduction" --new "Introduction\nThis report covers Q1 results."
 ```
 
 Delete text:
 
 ```bash
-docx edit report.docx --old "Remove this sentence." --new ""
+ox edit report.docx --old "Remove this sentence." --new ""
 ```
 
 Find and replace across files:
 
 ```bash
-docx edit "**/*.docx" --old "Acme Corp" --new "Globex Inc" --replace-all
+ox edit "**/*.docx" --old "Acme Corp" --new "Globex Inc" --replace-all
 # contracts/nda.docx: replaced 3 occurrences
 # contracts/sow.docx: replaced 7 occurrences
 # total: 10 replacements across 2 files
@@ -82,20 +82,20 @@ docx edit "**/*.docx" --old "Acme Corp" --new "Globex Inc" --replace-all
 Preview before editing:
 
 ```bash
-docx edit report.docx --old "Draft" --new "Final" --dry-run
+ox edit report.docx --old "Draft" --new "Final" --dry-run
 # would replace 1 occurrence
 ```
 
 Edit with tracked changes:
 
 ```bash
-docx edit report.docx --old "Draft" --new "Final" --track --author "Dan"
+ox edit report.docx --old "Draft" --new "Final" --track --author "Dan"
 ```
 
 Add a comment:
 
 ```bash
-docx comment add report.docx --at "revenue figures" --text "Need source for this claim"
+ox comment add report.docx --at "revenue figures" --text "Need source for this claim"
 ```
 
 ## Design
