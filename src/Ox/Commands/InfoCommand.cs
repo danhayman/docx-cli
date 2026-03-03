@@ -33,7 +33,8 @@ public static class InfoCommand
     private static Task<int> ShowDocxInfo(string file)
     {
         using var doc = DocumentService.OpenRead(file);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart?.Document?.Body
+            ?? throw new InvalidOperationException("invalid .docx: no document body");
         var props = doc.PackageProperties;
         var fileInfo = new FileInfo(file);
 

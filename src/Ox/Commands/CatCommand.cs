@@ -71,7 +71,8 @@ public static class CatCommand
     private static List<ParagraphInfo> ExtractDocx(string file)
     {
         using var doc = DocumentService.OpenRead(file);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart?.Document?.Body
+            ?? throw new InvalidOperationException("invalid .docx: no document body");
         return DocumentService.GetParagraphs(body);
     }
 

@@ -12,7 +12,7 @@ public class IntegrationTests
     {
         var path = TestHelper.CreateTestDocx("First paragraph", "", "Third paragraph");
         using var doc = DocumentService.OpenRead(path);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
         var paragraphs = DocumentService.GetParagraphs(body);
 
         Assert.Equal(3, paragraphs.Count);
@@ -29,7 +29,7 @@ public class IntegrationTests
     {
         var path = TestHelper.CreateTestDocx("Hello World", "One two three");
         using var doc = DocumentService.OpenRead(path);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var words = DocumentService.CountWords(body);
         Assert.Equal(5, words);
@@ -46,7 +46,7 @@ public class IntegrationTests
             [["A", "B"], ["C", "D"]]);
 
         using var doc = DocumentService.OpenRead(path);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
         var paragraphs = DocumentService.GetParagraphs(body);
 
         Assert.Equal(3, paragraphs.Count); // 1 para + 2 table rows
@@ -91,7 +91,7 @@ public class IntegrationTests
         // Edit
         using (var doc = DocumentService.OpenForEdit(path, outputPath, backup: false))
         {
-            var body = doc.MainDocumentPart!.Document.Body!;
+            var body = doc.MainDocumentPart!.Document!.Body!;
             TextReplacer.ReplaceInBody(body, "30 days", "60 days");
             DocumentService.SaveAtomically(doc, path, outputPath);
         }
@@ -124,7 +124,7 @@ public class IntegrationTests
     {
         var path = TestHelper.CreateTestDocx();
         using var doc = DocumentService.OpenRead(path);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
         var paragraphs = DocumentService.GetParagraphs(body);
         var words = DocumentService.CountWords(body);
 

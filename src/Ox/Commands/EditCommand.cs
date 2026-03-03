@@ -67,7 +67,8 @@ public static class EditCommand
                     if (dryRun)
                     {
                         using var readDoc = DocumentService.OpenRead(file);
-                        var readBody = readDoc.MainDocumentPart!.Document.Body!;
+                        var readBody = readDoc.MainDocumentPart?.Document?.Body
+                            ?? throw new InvalidOperationException("invalid .docx: no document body");
                         var count = TextReplacer.CountInBody(readBody, oldText);
 
                         if (count == 0)
@@ -99,7 +100,8 @@ public static class EditCommand
                     // Pre-check
                     {
                         using var checkDoc = DocumentService.OpenRead(file);
-                        var checkBody = checkDoc.MainDocumentPart!.Document.Body!;
+                        var checkBody = checkDoc.MainDocumentPart?.Document?.Body
+                            ?? throw new InvalidOperationException("invalid .docx: no document body");
                         var count = TextReplacer.CountInBody(checkBody, oldText);
 
                         if (count == 0)
@@ -122,7 +124,8 @@ public static class EditCommand
                     }
 
                     using var doc = DocumentService.OpenForEdit(file, output, backup);
-                    var body = doc.MainDocumentPart!.Document.Body!;
+                    var body = doc.MainDocumentPart?.Document?.Body
+                        ?? throw new InvalidOperationException("invalid .docx: no document body");
 
                     int replaced;
                     if (track)

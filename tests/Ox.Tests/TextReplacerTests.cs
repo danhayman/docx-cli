@@ -12,7 +12,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateTestDocx("Hello World");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.ReplaceInBody(body, "World", "Earth");
         doc.Save();
@@ -30,7 +30,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateMultiRunDocx(["Hello Wo", "rld!"]);
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.ReplaceInBody(body, "World", "Earth");
         doc.Save();
@@ -48,7 +48,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateMultiRunDocx(["Hel", "lo Wor", "ld"]);
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.ReplaceInBody(body, "Hello World", "Hi Earth");
         doc.Save();
@@ -66,7 +66,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateTestDocx("Hello World");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.ReplaceInBody(body, "xyz", "abc");
         doc.Dispose();
@@ -80,7 +80,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateTestDocx("cat and cat and cat");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.ReplaceInBody(body, "cat", "dog", replaceAll: true);
         doc.Save();
@@ -98,7 +98,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateTestDocx("cat and cat");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.ReplaceInBody(body, "cat", "dog", replaceAll: false);
         doc.Save();
@@ -114,7 +114,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateTestDocx("Hello World", "Hello Again", "Goodbye");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TextReplacer.CountInBody(body, "Hello");
         doc.Dispose();
@@ -131,14 +131,14 @@ public class TextReplacerTests
 
         {
             using var doc = WordprocessingDocument.Open(path, true);
-            var body = doc.MainDocumentPart!.Document.Body!;
+            var body = doc.MainDocumentPart!.Document!.Body!;
             TextReplacer.ReplaceInBody(body, "World", "Earth");
             doc.Save();
         }
 
         // Reopen and check formatting
         using var doc2 = WordprocessingDocument.Open(path, false);
-        var body2 = doc2.MainDocumentPart!.Document.Body!;
+        var body2 = doc2.MainDocumentPart!.Document!.Body!;
         var runs = body2.Descendants<Run>().ToList();
         Assert.True(runs.Count > 0);
         // The run with replacement should still have bold
@@ -153,7 +153,7 @@ public class TextReplacerTests
     {
         var path = TestHelper.CreateTestDocx("Hello Beautiful World");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         TextReplacer.ReplaceInBody(body, "Beautiful ", "");
         doc.Save();

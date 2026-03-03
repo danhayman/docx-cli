@@ -14,7 +14,9 @@ public static class PresentationService
         var presentationPart = doc.PresentationPart
             ?? throw new InvalidOperationException("invalid .pptx: no presentation part");
 
-        var slideIds = presentationPart.Presentation.SlideIdList?.Elements<SlideId>()
+        var presentation = presentationPart.Presentation
+            ?? throw new InvalidOperationException("invalid .pptx: no presentation element");
+        var slideIds = presentation.SlideIdList?.Elements<SlideId>()
             ?? Enumerable.Empty<SlideId>();
 
         foreach (var slideId in slideIds)
@@ -23,8 +25,10 @@ public static class PresentationService
                 ?? throw new InvalidOperationException("slide missing relationship ID");
 
             var slidePart = (SlidePart)presentationPart.GetPartById(relId);
+            var slide = slidePart.Slide;
+            if (slide == null) continue;
 
-            foreach (var shape in slidePart.Slide.Descendants<Shape>())
+            foreach (var shape in slide.Descendants<Shape>())
             {
                 var textBody = shape.TextBody;
                 if (textBody == null) continue;
@@ -45,7 +49,7 @@ public static class PresentationService
 
     public static int CountSlides(PresentationDocument doc)
     {
-        return doc.PresentationPart?.Presentation.SlideIdList?.Elements<SlideId>().Count() ?? 0;
+        return doc.PresentationPart?.Presentation?.SlideIdList?.Elements<SlideId>().Count() ?? 0;
     }
 
     public static int CountWords(PresentationDocument doc)

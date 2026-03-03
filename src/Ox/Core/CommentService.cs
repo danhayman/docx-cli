@@ -9,7 +9,8 @@ public static class CommentService
     public static int AddComment(WordprocessingDocument doc, string anchorText, string commentText,
         string author, StringComparison comparison = StringComparison.Ordinal)
     {
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart?.Document?.Body
+            ?? throw new InvalidOperationException("invalid .docx: no document body");
 
         // Find the anchor text
         foreach (var para in body.Descendants<Paragraph>())
@@ -143,7 +144,8 @@ public static class CommentService
         comment.Remove();
 
         // Remove range markers and reference from document body
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart?.Document?.Body
+            ?? throw new InvalidOperationException("invalid .docx: no document body");
         foreach (var start in body.Descendants<CommentRangeStart>().Where(s => s.Id?.Value == idStr).ToList())
             start.Remove();
         foreach (var end in body.Descendants<CommentRangeEnd>().Where(e => e.Id?.Value == idStr).ToList())
@@ -156,7 +158,7 @@ public static class CommentService
 
     private static string FindCommentAnchorText(WordprocessingDocument doc, string commentId)
     {
-        var body = doc.MainDocumentPart?.Document.Body;
+        var body = doc.MainDocumentPart?.Document?.Body;
         if (body == null) return "";
 
         var rangeStart = body.Descendants<CommentRangeStart>()

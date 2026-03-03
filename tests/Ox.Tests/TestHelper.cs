@@ -90,14 +90,14 @@ public static class TestHelper
     public static string ReadDocxText(string path)
     {
         using var doc = WordprocessingDocument.Open(path, false);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
         return string.Join("\n", body.Elements<Paragraph>().Select(p => p.InnerText));
     }
 
     public static List<string> ReadDocxParagraphs(string path)
     {
         using var doc = WordprocessingDocument.Open(path, false);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
         return body.Elements<Paragraph>().Select(p => p.InnerText).ToList();
     }
 }

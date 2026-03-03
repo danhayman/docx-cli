@@ -45,7 +45,7 @@ public class CommentServiceTests
         Assert.Empty(comments);
 
         // Verify range markers are removed
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
         Assert.Empty(body.Descendants<CommentRangeStart>());
         Assert.Empty(body.Descendants<CommentRangeEnd>());
 

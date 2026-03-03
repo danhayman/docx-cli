@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>ox</AssemblyName>
     <PublishAot>true</PublishAot>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <InvariantGlobalization>false</InvariantGlobalization>
     <Version>0.1.0</Version>
   </PropertyGroup>

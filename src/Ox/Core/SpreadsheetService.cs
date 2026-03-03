@@ -15,7 +15,9 @@ public static class SpreadsheetService
 
         var sharedStrings = BuildSharedStrings(workbookPart);
 
-        var sheets = workbookPart.Workbook.Sheets?.Elements<Sheet>()
+        var workbook = workbookPart.Workbook
+            ?? throw new InvalidOperationException("invalid .xlsx: no workbook element");
+        var sheets = workbook.Sheets?.Elements<Sheet>()
             ?? Enumerable.Empty<Sheet>();
 
         foreach (var sheet in sheets)
@@ -28,8 +30,10 @@ public static class SpreadsheetService
                 ?? throw new InvalidOperationException($"sheet '{sheet.Name}' missing relationship ID");
 
             var worksheetPart = (WorksheetPart)workbookPart.GetPartById(relId);
+            var worksheet = worksheetPart.Worksheet
+                ?? throw new InvalidOperationException($"sheet '{sheet.Name}' has no worksheet");
 
-            foreach (var row in worksheetPart.Worksheet.Descendants<Row>())
+            foreach (var row in worksheet.Descendants<Row>())
             {
                 var cells = row.Elements<Cell>()
                     .Select(c => ResolveCellValue(c, sharedStrings));
@@ -46,7 +50,7 @@ public static class SpreadsheetService
         var workbookPart = doc.WorkbookPart
             ?? throw new InvalidOperationException("invalid .xlsx: no workbook part");
 
-        return (workbookPart.Workbook.Sheets?.Elements<Sheet>()
+        return (workbookPart.Workbook?.Sheets?.Elements<Sheet>()
             .Select(s => s.Name?.Value ?? "(unnamed)")
             ?? Enumerable.Empty<string>())
             .ToList();

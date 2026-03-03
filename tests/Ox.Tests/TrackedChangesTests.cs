@@ -12,7 +12,7 @@ public class TrackedChangesTests
     {
         var path = TestHelper.CreateTestDocx("Hello World");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         var count = TrackedChanges.ReplaceWithTracking(body, "World", "Earth", "TestAuthor");
         doc.Save();
@@ -44,7 +44,7 @@ public class TrackedChangesTests
     {
         var path = TestHelper.CreateTestDocx("Hello World");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         TrackedChanges.ReplaceWithTracking(body, "World", "Earth", "Author1");
         doc.Save();
@@ -67,7 +67,7 @@ public class TrackedChangesTests
     {
         var path = TestHelper.CreateTestDocx("cat and cat");
         using var doc = WordprocessingDocument.Open(path, true);
-        var body = doc.MainDocumentPart!.Document.Body!;
+        var body = doc.MainDocumentPart!.Document!.Body!;
 
         TrackedChanges.ReplaceWithTracking(body, "cat", "dog", "Author1", replaceAll: true);
         doc.Save();
